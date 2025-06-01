@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This script captures and analyzes 802.11 WiFi beacon frames from nearby wireless networks. It displays information such as SSID (network name), BSSID (access point MAC address), channel, signal strength (RSSI), and detected security protocols (Open, WEP, WPA, WPA2/WPA3).
+This script captures and analyzes 802.11 WiFi beacon frames from nearby wireless networks. It displays information such as SSID (network name), BSSID (access point MAC address), channel, signal strength (RSSI), detected security protocols (Open, WEP, WPA, WPA2/WPA3), and a calculated security score with a corresponding threat level.
 
 This tool is intended for educational and network analysis purposes only, adhering to passive analysis principles.
 
@@ -47,8 +47,28 @@ This tool is intended for educational and network analysis purposes only, adheri
     On Windows, you might run it from an administrator command prompt.
 
 4.  The script will list available interfaces. Enter the name of your interface that is in **monitor mode**.
-5.  The script will then start sniffing for beacon frames and display information about discovered networks.
+5.  The script will then start sniffing for beacon frames and display information about discovered networks, including their security score and threat level.
 6.  Press `Ctrl+C` to stop the script.
+
+## Security Scoring (V1 - Encryption Focused)
+
+The script now implements a basic security scoring mechanism based on the detected WiFi security settings. The total score (out of 100) is calculated based on:
+
+*   **Encryption Security (40% weight):** Evaluates the strength of the encryption protocol (e.g., WPA3, WPA2-AES, WEP, Open). This is the primary driver of the score in the current version.
+*   **Configuration Security (30% weight):** *Currently a placeholder.* In future versions, this will assess AP configuration aspects. For now, it contributes a neutral value to the score.
+*   **Behavioral Analysis (30% weight):** *Currently a placeholder.* In future versions, this will analyze network behavior for anomalies. For now, it contributes a neutral value.
+
+### Threat Levels
+
+Based on the total security score, a threat level is assigned:
+
+*   **CRITICAL (0-20):** Immediate security risk. Avoid connection if possible, or use extreme caution (e.g., trusted VPN). Likely Open, WEP, or severely misconfigured.
+*   **HIGH (21-40):** Significant risk. Use only with a trusted VPN and exercise caution. May indicate older protocols like WPA-TKIP.
+*   **MEDIUM (41-60):** Moderate risk. Potentially usable for general browsing with precautions (e.g., HTTPS, VPN). May indicate WPA2 with older ciphers or minor configuration concerns (once implemented).
+*   **LOW (61-80):** Minimal risk. Generally suitable for most activities if WPA2-AES or better is confirmed.
+*   **SECURE (81-100):** High confidence in security. Indicates strong protocols like WPA3 or well-configured WPA2-AES with enterprise authentication.
+
+**Note:** The accuracy of the Configuration and Behavioral scores will improve as more detailed checks are implemented in future versions. Always correlate these findings with other security best practices.
 
 ## Disclaimer
 
